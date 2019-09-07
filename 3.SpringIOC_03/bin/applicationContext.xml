@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+	<bean class="com.wx.spring.bean.Car" id="car">
+		<property name="carName" value="小宝马"></property>
+	</bean>
+	<!-- 实验15：通过注解分别创建Dao、Service、Controller *** -->
+	<!-- 通过给bean上添加某些注解，可以快速将bean加入到ioc容器中
+		  某个类上添加上任何一个注解都能快速的将这个组件加入到Ioc容器的管理中；
+		 Spring有四个注解：
+		 @Controoler：控制器，推荐给控制器的组件加上这个注解(Servlet)
+		 @Service：业务逻辑，推荐给业务逻辑层组件加上这个注解(Service)
+		 @Repository：数据库，给数据库层组件加上这个注解(持久化层,Dao)
+		 @Component:组件，给不属于以上三层的组件加上这个注解
+		 加了注解的bean默认id就是类名首字母小写,或者@Service("xxx");这样xxx就是id
+		 注解可以随便加，Spring底层不会去验证组件是否符合注解的字面意思。
+		 推荐各自层加入各自注解
+		 
+		 使用注解将组件快速加入到容器中需要几步：
+		 1）、给要添加的组件标上注解
+		 2）、告诉Spring，自动扫描加了注解的组件：依赖context名称空间
+		 3）、一定要导入AOP包，支持加注解模式的，没有AOP会报错
+	 -->
+	 <!--  context:component-scan:自动组件扫描
+	 	   base-package：指定扫描的基础包；包基础包以及下面所有的包将所有加了注解的类，自动扫描进Ioc容器
+	  -->
+	  
+<!-- 	 <context:component-scan base-package="com.wx.spring">
+	 	
+			 	
+			  实验17：使用context:exclude-filter指定扫描包时不包含的类
+			 【type="annotation"】 按照排除规则；按照注解进行排除，标注了指定注解的组件不要 
+	 		  加了org.springframework.stereotype.Controller，Servlet就不会被扫进来了
+	 		 【type="assignable"】指定排序某个具体的类，按照全类名排除
+	 		 ********* 以下三个不会使用************
+	 		 type="aspectj"  aspectj表达式
+	 		 type="custom" 自定义一个TypeFilter，自己决定使用啥
+	 		 type="regex" 正则表达式 
+	 	
+	 	
+	 	<context:exclude-filter type="regex" expression="org.springframework.stereotype.Controller"/>
+	 </context:component-scan> -->
+	 
+	 <!-- 
+	 	 实验16：使用context:include-filter指定扫描包时要包含的类
+	 	               只扫描进入哪些组件；默认都是全部扫描进来
+	 	               如果只需要扫描某个类，需要阻止默认行为use-default-filters="false"
+	  -->
+<!-- 	  <context:component-scan base-package="com.wx.spring" use-default-filters="false">
+	 	指定只扫描哪些组件
+	 	<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>	
+	 	<context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>	
+	  </context:component-scan> -->
+	  
+	  <!-- DI(依赖注入) -->
+	  <!-- 实验18：使用@Autowired注解实现根据类型实现自动装配 -->
+	  <!-- @Autowired原理
+	  	   1)、先按照类型去容器中找到对应的组件，bookService	= ioc.getBean(BookService.class);
+	  	   	   1)、找到一个：找到就赋值
+	  	   	   2)、没找到：抛异常
+	  	   	   3)、找到多个：根据变量名继续与id匹配
+	  	   	   	   1)、按照变量名id继续装配
+	  	   	   	       1)、匹配上：装配
+	  	   	   	       2)、没有匹配上。报错
+	  	   	   	              使用 @Qualifier("bookService")指定新的id去匹配
+	  	   @Autowired默认必须装配上，否则报错
+	   -->
+	  <context:component-scan base-package="com.wx.spring"></context:component-scan>
+	  
+	  <!-- 
+	  	      实验19：如果资源类型的bean不止一个，默认根据@Autowired注解标记的成员变量名
+	  	                    作为id查找bean，进行装配
+	  	                    
+	  	      实验20：如果根据成员变量名作为id还是找不到bean，可以使用@Qualifier注解明确
+	  	                    指定目标bean的id
+	  	          @Autowired
+				  @Qualifier("bookService")      
+				     
+	  	      实验21：在方法的形参位置使用@Qualifier注解
+	  	      	   
+	  	      实验22：@Autowired注解的required属性指定某个属性允许不被设置
+	  	          @Autowired(required = false)找不到就返回null
+	   -->
+	   <!-- @Autowired、@Resource、@Inject都是自动装配的意思
+	   		@Autowired：是Spring的注解，最强大
+	   		@Resource：是j2ee自己的标准(扩展性很强)
+	   		@Inject：EJB
+	   -->
+</beans>

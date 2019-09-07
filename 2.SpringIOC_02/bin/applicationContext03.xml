@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+	
+	<bean class="com.wx.spring.bean.Car" id="car01">
+		<property name="carName" value="宝马"></property>
+		<property name="carPrice" value="399999.9"></property>
+	</bean>
+	<!-- 实验13：基于XML的自动装配（自定义类型自动赋值） -->
+	<!-- <bean class="com.wx.spring.bean.Car" id="car02">
+		<property name="carName" value="奔驰"></property>
+		<property name="carPrice" value="399999.9"></property>
+	</bean> -->
+	<!-- property：手动赋值
+		 自动赋值(自动装配):autowire
+		 "byName":按照名字：以属性名作为id去容器找到这个组件给他赋值，找不到装配NUll
+						  private Car car;
+		 "byType":以属性的类型作为id去容器找到这个组件给他赋值，找不到装配NUll,如果容器多个类型组件会报错
+		 				  private Car car;
+		 				  List会将所有符合类型的bean自动装配
+		 "constructor":按照构造器进行赋值：
+		 			   1)、先按照有参构造器参数类型进行装配
+		 			   2)、没有就装配NUll
+		 			   3)、如果按照类型找到多个，会根据参数名在IOC容器找到一样的，否则装配NUll
+		 			   4)、不会报错
+		 no = default 不赋值
+	 -->
+	<bean class="com.wx.spring.bean.Person" id="person01" autowire="byType">
+		<!-- <property name="car" ref="car01"></property> -->
+	</bean>
+	
+	<bean class="com.wx.spring.bean.Book" id="book01">
+		<property name="bookName" value="book01"></property>
+	</bean>
+	<bean class="com.wx.spring.bean.Book" id="book02">
+		<property name="bookName" value="book02"></property>
+	</bean>
+	<bean class="com.wx.spring.bean.Book" id="book03">
+		<property name="bookName" value="book03"></property>
+	</bean>
+	
+	<!-- 实验14：SpEL测试I(Spring Expression Language)Spring表达式语言
+				在SpEL中使用字面量
+				引用其他bean
+				引用其他bean的某个属性值
+				调用非静态方法
+				调用静态方法
+				使用运算符
+	 -->
+	 <!-- EL表达式:${xxx},SpEL表达式:#{xxx} -->
+	 <bean class="com.wx.spring.bean.Person" id="person02">
+	 	<property name="age" value="#{60*60*24*365}"></property>
+	 	<property name="lastName" value="#{book01.bookName}"></property>
+	 	<!-- 可以直接#{id}取出数据，和ref一样 -->
+	 	<property name="car" value="#{car01}"></property>
+	 	
+	 	<!-- 
+	 		调用静态方法:UUID.randomUUID().toString();
+	 		使用规范:#{T(全类名).静态方法名(参数)}
+	 	 -->
+	 	<property name="eamil" value="#{T(java.util.UUID).randomUUID().toString().substring(0,5)}"></property>
+		<!-- 
+			调用非静态方法： 对象.方法名
+		 -->
+		 <property name="gender" value="#{book01.getBookName()}"></property>
+	 </bean>
+</beans>

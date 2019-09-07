@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd">
+
+	<!-- 正确的为各种属性赋值 -->
+	<!-- 不写就默认为null -->
+	<bean class="com.wx.spring.bean.Person" id="person01">
+		<property name="lastName">
+			<!-- 复杂类型的赋值需要如下 在property里面设置属性 -->
+			<null></null>
+		</property>
+	</bean>
+	
+	<bean class="com.wx.spring.bean.Car" id="car01">
+		<property name="carName" value="宝马"></property>
+		<property name="carPrice" value="300000"></property>
+	</bean>
+	<bean class="com.wx.spring.bean.Person" id="person02">
+		<!-- ref：引用 其他-->
+		<!-- <property name="car" ref="car01">
+		</property> -->
+		<property name="car">
+			<!-- 对象我们可以使用bean标签创建 ***  内部bean *** -->
+			<bean class="com.wx.spring.bean.Car">
+				<property name="carName" value="奔驰"></property>
+				<property name="carPrice" value="555555"></property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean class="com.wx.spring.bean.Book" id="ref01">
+		<property name="bookName" value="虹猫蓝兔七侠传"></property>
+		<property name="author" value="赵大宝"></property>
+	</bean>
+	<bean class="com.wx.spring.bean.Person" id="person03">
+		<property name="books">
+			<!-- books = new ArrayList<Book>(); -->
+			<list>
+				<bean class="com.wx.spring.bean.Book" p:bookName="奥特曼" p:author="佐野豪"></bean>
+				<ref bean="ref01"/>
+			</list>
+		</property>
+		
+		<property name="maps">
+			<!-- maps = new LinkedHashMap<>(); -->
+			<map>
+				<!-- 一个entry代表一个键值对 -->
+				<entry key="key01" value="张三"></entry>
+				<entry key="key02" value="18"></entry>
+				<!-- value-ref:引用外部的bean作为value -->
+				<entry key="key03" value-ref="ref01"></entry>
+				<entry key="key04">
+					<bean class="com.wx.spring.bean.Car">
+						<property name="carName" value="玛莎拉蒂"></property>
+						<property name="carPrice" value="66666666"></property>
+					</bean>
+				</entry>
+				<entry key="key05">
+					<map>
+						<entry key="map zhong map" value="wx nb"></entry>
+					</map>
+				</entry>
+			</map>
+		</property>
+		
+		<property name="properties">
+			<!-- properties = new Properties();所有的k=v都是string -->
+			<props>
+				<prop key="username">王小星</prop>
+				<prop key="gender">男</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- util名称空间 创建集合类型的bean：方便别人引用-->
+	<bean class="com.wx.spring.bean.Person" id="person04">
+		<property name="maps" ref="refmap"></property>
+	</bean>
+	<!-- 相当于new 了一个LinkedHashMap<>() -->
+	<util:map id="refmap">
+		<entry key="username">
+			<value>root</value>
+		</entry>
+		<entry key="password">
+			<value>root123</value>
+		</entry>
+		<entry key="superadmin">
+			<value>yes</value>
+		</entry>
+	</util:map>
+	
+	<util:list id="reflist">
+		<list>
+			<bean class="com.wx.spring.bean.Book">
+				<property name="bookName" value="黑猫警长"></property>
+				<property name="author" value="大老鼠"></property>
+			</bean>
+		</list>
+		
+		<value>774891</value>
+		
+		<ref bean="refmap"/>
+	</util:list>
+	<!-- 级联属性可以修改属性的属性 -->
+	<bean class="com.wx.spring.bean.Person" id="person06">
+		<property name="car" ref="car01"></property>
+		<property name="car.carName" value="兰博基尼"></property>
+	</bean>
+	
+	<!-- abstract:这个bean是一个抽象的，只能被继承，不能实例 -->
+	<bean class="com.wx.spring.bean.Person" id="person07" abstract="true">
+		<property name="lastName" value="王小星"></property>
+		<property name="age" value="20"></property>
+		<property name="gender" value="女"></property>
+		<property name="eamil" value="xiaoxing@qq.com"></property>
+	</bean>
+	<!-- parent:指定当前bean的配置信息继承于哪一个 -->
+	<bean class="com.wx.spring.bean.Person" id="person08" parent="person07">
+		<property name="lastName" value="王小虎"></property>
+	</bean>
+</beans>

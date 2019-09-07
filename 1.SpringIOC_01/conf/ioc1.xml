@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 注册一个Person对象，Spring会自动创建这个Person对象 -->
+	<!-- 一个bean标签可以注册一个组件
+		 class：写要注册的组件的全类名
+		 id：这个对象的唯一标示
+	 -->
+	 <bean class="com.wx.spring.bean.Person" id="person01">
+	 	<!-- 使用property标签为Person对象的属性赋值 
+	 		 name:javabean里的属性值
+	 		 value:为这个属性赋值
+	 	-->
+	 	<property name="lastName" value="张三"></property>
+	 	<property name="age" value="18"></property>
+	 	<property name="eamil" value="zhangsan@qq.com"></property>
+	 	<property name="gender" value="男"></property>
+	 	<property name="flag" value="false"></property>
+	 </bean>
+	 
+	 <bean class="com.wx.spring.bean.Person" id="person02">
+	 	<property name="lastName" value="李四"></property>
+	 	<property name="age" value="18"></property>
+	 	<property name="eamil" value="lisi@qq.com"></property>
+	 	<property name="gender" value="男"></property>
+	 	<property name="flag" value="true"></property>
+	 </bean>
+	 
+	 <bean class="com.wx.spring.bean.Person" id="person03">
+	 	<!-- 调用参数构造器进行创建对象并复制 
+	 		 constructor-arg代表构造器一个参数，有几个用几个,不然会报错
+	 		  *****  需要掌握   *****
+	 		   可以不写name，但是value的顺序要按照构造器的顺序
+	 		 index为参数指定索引，从0开始
+	 	-->
+	 	<constructor-arg name="lastName" value="小宝"></constructor-arg>
+	 	<constructor-arg name="age" value="22"></constructor-arg>
+	 	<constructor-arg name="eamil" value="xiaobao@qq.com"></constructor-arg>
+	 	<constructor-arg name="flag" value="true"></constructor-arg>
+	 	<constructor-arg name="gender" value="女"></constructor-arg>
+	 </bean>
+	 
+	 <!-- 
+	 	 如果构造函数重载，参数个数相同，如果指定使用哪个，只需将不同的类型写上即可，type=...
+	 	 例如：java.lang.Integer...
+	  -->
+	 <bean class="com.wx.spring.bean.Person" id="person04">
+	 	<constructor-arg value="小星"></constructor-arg>
+	 	<constructor-arg value="18" type="java.lang.Integer"></constructor-arg>
+	 	<constructor-arg value="xiaoxing@qq.com"></constructor-arg>
+	 </bean>
+	 
+	 <!-- 通过p名称空间为bean赋值  需要导入p名称空间-->
+	 <!-- 名称空间：在xml中名称空间是用来防止标签重复的 -->
+	 <!--  例如这样就会发生name冲突，比较麻烦，可以在冲突的前面加上标签，类似下例中的a:,b:...
+	 		<book>
+	 			<a:name>西游记</a:name>
+	 			<price>19.98</price>
+	 			<author>
+	 				<b:name>吴承恩</b:name>
+	 				<gender>男</gender>
+	 			</author>
+	 		</book>
+	  -->
+	  <bean class="com.wx.spring.bean.Person" id="person05"
+	  p:age="16" p:eamil="xiaohu@qq.com" p:lastName="小虎" p:gender="男"></bean>
+	  
+	  
+</beans>

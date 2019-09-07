@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 原来是按照配置的顺序创建的bean-->
+	<!-- 改变bean的创建顺序 -->
+	<!-- 实验8：bean之间的依赖（只能改变创建顺序）
+		 depends-on:可以写多个，会先创建依赖
+	 -->
+	<bean class="com.wx.spring.bean.Car" id="car" depends-on="person"></bean>
+	<bean class="com.wx.spring.bean.Person" id="person"></bean>
+	<!-- <bean class="com.wx.spring.bean.Book" id="book"></bean> -->
+	
+	<!-- 实验9：测试bean的作用域 ，分别创建单实例和多实例的bean
+		  bean的作用域：指定bean是否单实例，默认单实例
+	-->
+	<!-- 
+		prototype:多实例的
+			1）、容器启动，默认不会创建多实例bean
+			2）、获取的时候创建这个bean
+			3）、每一次获取都会创建一个新的对象
+			
+		singleton:单实例的（默认）
+			1）、在容器启动完成之前就已经创建好对象，保存在容器中了
+			2）、任何获取都是获取之前创建好的那个对象
+			
+		request:在web环境下，同一次请求创建一个bean实例（没用）
+		session:在web环境下，同一次会话创建一个bean实例（没用）
+	 -->
+	<bean class="com.wx.spring.bean.Book" id="book02" scope="prototype"></bean>
+	
+	<!-- ******************************************************************* -->
+	<!-- 实验5：配置通过静态工厂方法创建bean，实例工厂方法创建的bean、FactoryBean** -->
+	<!-- bean的创建默认就是框架利用反射new出来的实例 -->
+	<!-- 工厂模式：工厂帮我们创建对象；有一个专门帮我们创建对象的类 ，这个类就是工厂
+		  AirPlane ap = AirPlaneFactory.getAirPlane(String JzName);
+		  
+		  静态工厂：工厂本身不用创建对象；通过静态方法调用，对象 = 工厂类.工厂方法名（）；;
+		  实例工厂：工厂本身需要创建对象；
+		  		工厂类 工厂对象 = new 工厂类（）；
+		  		工厂对象.getAirPlane("张三");
+		-->
+	<!-- 1、静态工厂(不需要创建工厂本身) -->
+	<bean id="airplane01" class="com.wx.spring.factory.AirPlaneStaticFactory" factory-method="getAirPlane">
+		<constructor-arg value="王大星"></constructor-arg>
+	</bean>
+	
+	<!-- 2、实例工厂
+		   1)、先配置出实例工厂对象
+		   2)、配置我们要创建的AirPlane使用哪个工厂创建
+		   	  2.1)、factory-bean：指定使用哪个工厂实例
+		   	  2.2）、factory-method：指定使用哪个方法
+	-->
+	<bean id="airplaneInstanceFactory" class="com.wx.spring.factory.AirPlaneInstanceFactory"></bean>
+	<bean id="airplane02" class="com.wx.spring.bean.AirPlane" factory-bean="airplaneInstanceFactory" factory-method="getAirPlane">
+		<constructor-arg value="王小虎"></constructor-arg>
+	</bean>
+	
+	<!-- FactoryBean(是Spring规定的一个接口)
+		   只要是这个接口的实现类，Spring都认为是一个工厂；
+		 Ioc容器再启动的时候不会创建
+	 -->
+	 <bean id="myFactoryImpl" class="com.wx.spring.factory.MyFactoryImpl"></bean>
+</beans>

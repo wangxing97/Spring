@@ -1,0 +1,8 @@
+核心容器
+spring-beans-4.1.6.RELEASE.jar
+spring-context-4.1.6.RELEASE.jar
+spring-core-4.1.6.RELEASE.jar
+spring-expression-4.1.6.RELEASE.jar
+
+Spring运行的时候依赖一个日志包，没有会报错
+commons-logging-1.1.1.jar
